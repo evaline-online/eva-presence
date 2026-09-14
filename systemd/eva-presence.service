@@ -1,0 +1,19 @@
+[Unit]
+Description=EvaBot Presence — Omnichannel Virtual Human Gateway
+After=network.target evabot-brain.service evabot-voice.service
+
+[Service]
+Type=simple
+User=evabot
+WorkingDirectory=/home/evabot/Desktop/eva-presence
+Environment=NODE_ENV=production
+Environment=PRESENCE_PORT=8095
+Environment=PRESENCE_HOST=0.0.0.0
+ExecStart=/usr/bin/node dist/server.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

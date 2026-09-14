@@ -1,0 +1,23 @@
+{
+  "persona": "eva",
+  "mode": "duplex",
+  "language": "ru",
+  "brainApiUrl": "http://127.0.0.1:3000/api/chat",
+  "voiceApiUrl": "http://127.0.0.1:8000/tts",
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8095
+  },
+  "googleMeet": {
+    "chromeExecutable": "/usr/bin/chromium",
+    "displayName": "Ева (EvaLine AI Partner)",
+    "headless": true,
+    "enableInCallChat": true,
+    "enableVoice": true
+  },
+  "telegram": {
+    "botToken": "",
+    "voiceNotesEnabled": true,
+    "groupCallEnabled": true
+  }
+}

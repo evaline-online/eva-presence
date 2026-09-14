@@ -1,0 +1,52 @@
+{
+  "name": "@evaline/presence",
+  "version": "0.1.0",
+  "description": "EvaBot Presence — Pluggable virtual human participant with voice & text for Google Meet, Telegram & any application",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "eva-presence": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./evaline-chat": {
+      "types": "./dist/adapters/EvalineChatPlugin.d.ts",
+      "import": "./dist/adapters/EvalineChatPlugin.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test dist/tests/*.test.js",
+    "start": "node dist/server.js",
+    "cli": "node dist/cli.js",
+    "meet": "node dist/cli.js meet",
+    "telegram": "node dist/cli.js telegram",
+    "server": "node dist/cli.js server"
+  },
+  "keywords": [
+    "evabot",
+    "evaline",
+    "virtual-human",
+    "ai-agent",
+    "google-meet",
+    "telegram",
+    "voice-bot",
+    "realtime-audio",
+    "webrtc",
+    "gemini-live"
+  ],
+  "author": "EvaLine Collective <evabot.online@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "@types/ws": "^8.5.12",
+    "typescript": "^5.5.4"
+  }
+}
