@@ -7,6 +7,8 @@
 import readline from 'node:readline';
 import { DialogSession } from './core/DialogSession.js';
 import { GoogleMeetAdapter } from './adapters/GoogleMeetAdapter.js';
+import { GoogleMeetFullStreamAdapter } from './adapters/GoogleMeetFullStreamAdapter.js';
+import { RtmpLiveStreamAdapter } from './adapters/RtmpLiveStreamAdapter.js';
 import { TelegramAdapter } from './adapters/TelegramAdapter.js';
 import { UniversalWsAdapter } from './adapters/UniversalWsAdapter.js';
 import type { PresenceState } from './types.js';
@@ -31,7 +33,44 @@ async function main(): Promise<void> {
   console.log(`\x1b[35m  EvaBot Presence — Omnichannel Virtual Human Plugin\x1b[0m`);
   console.log(`\x1b[36m========================================================\x1b[0m\n`);
 
-  if (command === 'meet') {
+  if (command === 'meet-full') {
+    const url = flags.url || flags.u;
+    if (!url) {
+      console.error('\x1b[31mОшибка: укажите URL конференции через --url https://meet.google.com/xxx-xxxx-xxx\x1b[0m');
+      process.exit(1);
+    }
+    const session = new DialogSession({
+      persona: (flags.persona as 'eva' | 'adam') || 'eva',
+      mode: 'duplex',
+      onStateChange: (state: PresenceState) => {
+        console.log(`\x1b[33m[Eva State]\x1b[0m ${state}`);
+      },
+    });
+    const adapter = new GoogleMeetFullStreamAdapter(session, {
+      meetingUrl: url,
+      displayName: flags.name || 'Ева (EvaLine AI Partner)',
+      faceUrl: flags.face || 'http://127.0.0.1:8093/',
+      headless: flags.headless !== 'false',
+    });
+
+    console.log(`[Google Meet Full] Запуск видеопотока 3D Лица и аудиопотока Голоса...`);
+    await adapter.connect();
+    console.log(`\x1b[32m[OK] Ева вошла в конференцию с Камерой (3D Лицо) и Микрофоном (Голос).\x1b[0m`);
+  } else if (command === 'stream') {
+    const rtmpUrl = flags.rtmp || flags.url;
+    if (!rtmpUrl) {
+      console.error('\x1b[31mОшибка: укажите RTMP URL через --rtmp rtmp://a.rtmp.youtube.com/live2/KEY\x1b[0m');
+      process.exit(1);
+    }
+    const session = new DialogSession({
+      persona: (flags.persona as 'eva' | 'adam') || 'eva',
+      mode: 'duplex',
+    });
+    const adapter = new RtmpLiveStreamAdapter(session, { rtmpUrl });
+    console.log(`[Live Stream] Запуск RTMP вещания 3D лица и голоса...`);
+    await adapter.connect();
+    console.log(`\x1b[32m[OK] Прямой эфир запущен.\x1b[0m`);
+  } else if (command === 'meet') {
     const url = flags.url || flags.u;
     if (!url) {
       console.error('\x1b[31mОшибка: укажите URL конференции через --url https://meet.google.com/xxx-xxxx-xxx\x1b[0m');
@@ -77,7 +116,6 @@ async function main(): Promise<void> {
     await adapter.connect();
     console.log(`\x1b[32m[OK] Universal WebSocket Server запущен на ws://0.0.0.0:${port}\x1b[0m`);
   } else if (command === 'console') {
-    // Interactive terminal conversation with Eva
     const session = new DialogSession({
       persona: (flags.persona as 'eva' | 'adam') || 'eva',
       mode: 'text',
@@ -109,10 +147,12 @@ async function main(): Promise<void> {
     promptUser();
   } else {
     console.log(`Доступные команды:
-  \x1b[32mmeet\x1b[0m     --url <google-meet-url> [--name "Eva"]     Подключить Еву к конференции Google Meet
-  \x1b[32mtelegram\x1b[0m [--token <bot-token>] [--chat <id>]        Запустить бота Telegram с голосом и текстом
-  \x1b[32mserver\x1b[0m   [--port 8095]                              Запустить Universal WebSocket шлюз для любых приложений
-  \x1b[32mconsole\x1b[0m  [--persona eva|adam]                       Интерактивный тестовый диалог в терминале
+  \x1b[32mmeet-full\x1b[0m --url <meet-url> [--face <url>]           Подключить Еву с КАМЕРОЙ (3D Лицо) и МИКРОФОНОМ (Голос)
+  \x1b[32mstream\x1b[0m    --rtmp <rtmp-url>                          Трансляция 3D Лица и Голоса в YouTube Live / Twitch / Telegram
+  \x1b[32mmeet\x1b[0m      --url <google-meet-url>                    Подключить Еву к конференции Google Meet (только аудио/чат)
+  \x1b[32mtelegram\x1b[0m  [--token <bot-token>] [--chat <id>]        Запустить бота Telegram с голосом и текстом
+  \x1b[32mserver\x1b[0m    [--port 8095]                              Запустить Universal WebSocket шлюз для любых приложений
+  \x1b[32mconsole\x1b[0m   [--persona eva|adam]                       Интерактивный тестовый диалог в терминале
 `);
   }
 }

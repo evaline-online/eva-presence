@@ -9,6 +9,8 @@ export { DialogSession, type DialogSessionEvents } from './core/DialogSession.js
 export { VoicePipeline, VadDetector, type VadOptions } from './core/VoicePipeline.js';
 export { BaseAdapter } from './adapters/BaseAdapter.js';
 export { GoogleMeetAdapter } from './adapters/GoogleMeetAdapter.js';
+export { GoogleMeetFullStreamAdapter, type GoogleMeetFullConfig } from './adapters/GoogleMeetFullStreamAdapter.js';
+export { RtmpLiveStreamAdapter, type RtmpStreamConfig } from './adapters/RtmpLiveStreamAdapter.js';
 export { TelegramAdapter } from './adapters/TelegramAdapter.js';
 export { UniversalWsAdapter } from './adapters/UniversalWsAdapter.js';
 export { EvalineChatPlugin } from './adapters/EvalineChatPlugin.js';
