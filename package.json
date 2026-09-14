@@ -42,6 +42,7 @@
   "author": "EvaLine Collective <evabot.online@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "puppeteer-core": "^25.11.0",
     "ws": "^8.18.0"
   },
   "devDependencies": {
